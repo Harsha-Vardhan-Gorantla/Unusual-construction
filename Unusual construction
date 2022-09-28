@@ -1,0 +1,83 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.*;
+
+public class TestSolution {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br  = new BufferedReader(new InputStreamReader(System.in));
+        int t = Integer.parseInt(br.readLine());
+        while (t-- > 0){
+            String[] input = br.readLine().split(" ");
+            int n = Integer.parseInt(input[0]);
+            int m = Integer.parseInt(input[1]);
+            Map<Connections, Integer> roadCounts = new HashMap<>();
+            List<Connections> listOfConnections = new ArrayList<>();
+            while (m-- > 0){
+                input = br.readLine().split(" ");
+                long l =  Long.parseLong(input[0]);
+                long r =  Long.parseLong(input[1]);
+                long w =  Long.parseLong(input[2]);
+                Connections currConnection = new Connections(l,r,w);
+                listOfConnections.add(currConnection);
+                roadCounts.put(currConnection, roadCounts.getOrDefault(currConnection, 0) + 1);
+            }
+            final int maxRepeat =  Collections.max(roadCounts.values());
+            long cost = 0;
+            if(maxRepeat > 1){
+                cost = listOfConnections.stream().filter(connections -> roadCounts.get(connections) < maxRepeat).mapToLong(Connections::getW).sum();
+            }
+            System.out.println(cost);
+        }
+    }
+}
+
+class Connections {
+    long l;
+    long r;
+    long w;
+
+    public Connections(long l, long r, long w){
+        this.l = l;
+        this.r = r;
+        this.w = w;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Connections)) return false;
+        Connections that = (Connections) o;
+        return (this.l == that.l && this.r == that.r);
+    }
+
+    public long getL() {
+        return l;
+    }
+
+    public void setL(long l) {
+        this.l = l;
+    }
+
+    public long getR() {
+        return r;
+    }
+
+    public void setR(long r) {
+        this.r = r;
+    }
+
+    public long getW() {
+        return w;
+    }
+
+    public void setW(long w) {
+        this.w = w;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(l, r);
+    }
+
+}
